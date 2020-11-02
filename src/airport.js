@@ -2,18 +2,19 @@
 
 class Airport {
   constructor() {
-    this._hangar = [] 
+    this.hangar = [] 
   };
 
   planes() {
-    return this._hangar;
+    return this.hangar;
   };
 
   clearForLanding(plane) {
-    this._hangar.push(plane);
+    this.hangar.push(plane);
   };
 
   clearForTakeOff(plane) {
-    this._hangar = [];
+    var index = this.hangar.indexOf(plane);
+    this.hangar.splice(index, 1);
   };
 };

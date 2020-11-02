@@ -2,10 +2,12 @@
 
 describe('Feature Test:', function(){
   var plane;
+  var plane2;
   var airport;
 
   beforeEach(function(){
     plane = new Plane();
+    plane2 = new Plane();
     airport = new Airport();
   });
 
@@ -19,4 +21,11 @@ describe('Feature Test:', function(){
     plane.takeOff();
     expect(airport.planes()).not.toContain(plane);
   });
+
+  it('only planes that take-off leave the airport', function(){
+    plane.land(airport);
+    plane2.land(airport);
+    plane.takeOff();
+    expect(airport.planes()).toContain(plane2);
+  })
 })
