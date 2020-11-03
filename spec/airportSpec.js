@@ -3,9 +3,11 @@
 describe('Airport', function(){
   var airport;
   var plane;
+  var weather;
 
   beforeEach(function(){
-    airport = new Airport();
+    weather = jasmine.createSpyObj('weather', ['isStormy']);
+    airport = new Airport(weather);
     plane = jasmine.createSpy('plane', ['land']);
   });
 
@@ -13,24 +15,35 @@ describe('Airport', function(){
     expect(airport.planes()).toEqual([]);
   });
 
-  it('can clear planes for landing', function(){
-    airport.clearForLanding(plane);
-    expect(airport.planes()).toEqual([plane]);
+  describe('under good weather conditions', function(){
+    beforeEach(function(){
+      weather.isStormy.and.returnValue(false);
+    });
+
+    it('can clear planes for landing', function(){
+      airport.clearForLanding(plane);
+      expect(airport.planes()).toEqual([plane]);
+    });
+
+    it('can clear planes for take-off', function(){
+      airport.clearForLanding(plane);
+      airport.clearForTakeOff(plane);
+      expect(airport.planes()).toEqual([]);
+    });
+
+
   });
 
-  it('can clear planes for take-off', function(){
-    airport.clearForLanding(plane);
-    airport.clearForTakeOff(plane);
-    expect(airport.planes()).toEqual([]);
-  });
+  describe('under stormy weather conditions', function(){
+    beforeEach(function(){
+      weather.isStormy.and.returnValue(true);
+    });
 
-  it('can check for stormy weather', function(){
-    expect(airport.isStormy()).toBeFalsey
-  })
+    it('prevents landing', function(){
+      expect(function(){ airport.clearForLanding(plane); }).toThrowError('DANGER - STORMY WEATHER')
+    });
 
-  describe('in stormy weather', function(){
     it('prevents take-off', function(){
-      spyOn(airport, 'isStormy').and.returnValue(true);
       expect(function(){ airport.clearForTakeOff(plane); }).toThrowError('DANGER - STORMY WEATHER')
     });
   });
