@@ -4,11 +4,15 @@ describe('Feature Test:', function(){
   var plane;
   var plane2;
   var airport;
+  var smallAirport;
+  var weather;
 
   beforeEach(function(){
     plane = new Plane();
     plane2 = new Plane();
     airport = new Airport();
+    weather = new Weather();
+    smallAirport = new Airport(weather, 1);
   });
   
   describe('under good weather conditions', function(){
@@ -32,6 +36,12 @@ describe('Feature Test:', function(){
       plane2.land(airport);
       plane.takeOff();
       expect(airport.planes()).toContain(plane2);
+    });
+
+    it('blocks landing when airport is full', function(){
+      plane.land(smallAirport);
+      expect(function(){ plane2.land(smallAirport); }).toThrowError('AIRPORT AT FULL CAPACITY');
+      expect(smallAirport.planes()).not.toContain(plane2);
     });
   });
 

@@ -4,11 +4,13 @@ describe('Airport', function(){
   var airport;
   var plane;
   var weather;
+  var smallAirport;
 
   beforeEach(function(){
     weather = jasmine.createSpyObj('weather', ['isStormy']);
     airport = new Airport(weather);
     plane = jasmine.createSpy('plane', ['land']);
+    smallAirport = new Airport(weather, 1);
   });
 
   it('has no planes by default', function(){
@@ -31,7 +33,10 @@ describe('Airport', function(){
       expect(airport.planes()).toEqual([]);
     });
 
-
+    it('prevents landing', function(){
+      smallAirport.clearForLanding(plane);
+      expect(function(){ smallAirport.clearForLanding(plane); }).toThrowError('AIRPORT AT FULL CAPACITY');
+    });
   });
 
   describe('under stormy weather conditions', function(){
