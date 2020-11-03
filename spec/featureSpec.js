@@ -28,4 +28,11 @@ describe('Feature Test:', function(){
     plane.takeOff();
     expect(airport.planes()).toContain(plane2);
   })
+
+  it('blocks take off when weather is stormy', function(){
+    plane.land(airport);
+    spyOn(airport, 'isStormy').and.returnValue(true);
+    expect(function(){ plane.takeOff();}).toThrowError('DANGER - STORMY WEATHER');
+    expect(airport.planes()).toContain(plane);
+  });
 })
